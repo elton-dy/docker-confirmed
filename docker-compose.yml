@@ -1,0 +1,36 @@
+version: '3'
+services:
+  client:
+    build:
+      context: ./client
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://server:8080
+    networks:
+      - mern-app-network
+
+  server:
+    build:
+      context: ./server
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/mydb
+    networks:
+      - mern-app-network
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - mern-app-network
+
+networks:
+  mern-app-network:
+
+volumes:
+  mongodb-data:
