@@ -1,41 +1,42 @@
-version: '3'
+version: '3'  # Define the Docker Compose version being used.
+
 services:
-  client:
+  client:  # Define the 'client' service.
     build:
-      context: ./client
+      context: ./client  # Specify the directory where the client Dockerfile is located.
     ports:
-      - "3000:3000"
+      - "3000:3000"  # Map host port 3000 to container port 3000 for the React app.
     environment:
-      - REACT_APP_API_URL=http://localhost:8080
+      - REACT_APP_API_URL=http://localhost:8080  # Set an environment variable for the React app.
     networks:
-      - mern-app-network
+      - mern-app-network  # Connect the 'client' container to the custom network.
 
-  server:
+  server:  # Define the 'server' service.
     build:
-      context: ./server
+      context: ./server  # Specify the directory where the server Dockerfile is located.
     ports:
-      - "8080:8080"
+      - "8080:8080"  # Map host port 8080 to container port 8080 for the Node.js server.
     environment:
-      - MONGODB_URI=mongodb://mongodb:27017/mydb
+      - MONGODB_URI=mongodb://mongodb:27017/mydb  # Set an environment variable for the server.
     networks:
-      - mern-app-network
+      - mern-app-network  # Connect the 'server' container to the custom network.
 
-  mongodb:
-    image: mongo:latest
+  mongodb:  # Define the 'mongodb' service.
+    image: mongo:latest  # Use the official 'mongo' Docker image.
     ports:
-      - "27017:27017"
+      - "27017:27017"  # Map host port 27017 to container port 27017 for MongoDB.
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
-      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}  # Set MongoDB root username.
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}  # Set MongoDB root password.
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}  # Set the name of the initial database.
     volumes:
-      - mongodb-data:/data/db
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - mongodb-data:/data/db  # Create a volume for persisting MongoDB data.
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro  # Mount a script for MongoDB initialization.
     networks:
-      - mern-app-network
+      - mern-app-network  # Connect the 'mongodb' container to the custom network.
 
 networks:
-  mern-app-network:
+  mern-app-network:  # Define a custom network named 'mern-app-network' for isolation.
 
 volumes:
-  mongodb-data:
+  mongodb-data:  # Define a volume named 'mongodb-data' for persisting MongoDB data.
